@@ -1,0 +1,40 @@
+services:
+    server:
+        container_name: server
+        build:
+            context: .
+        image: serve-soft-expert
+        entrypoint: "php -S 0.0.0.0:80 -t public"
+        working_dir: /var/www/html
+        tty: true
+        ports:
+            - 80:80
+        volumes:
+            - .:/var/www/html
+        networks:
+            - private
+        depends_on:
+            - postgres
+
+    postgres:
+        container_name: postgres
+        image: postgres
+        restart: always
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        ports:
+            - ${DB_PORT:-5432}:5432
+        environment:
+            POSTGRES_DB: ${DB_DATABASE:-db_dev}
+            POSTGRES_USER: ${DB_USERNAME:-admin}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
+        networks:
+            - private
+
+networks:
+    private:
+        driver: bridge
+
+volumes:
+    postgres:
+        driver: local
