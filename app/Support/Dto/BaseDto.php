@@ -2,7 +2,9 @@
 
 namespace App\Support\Dto;
 
-abstract class BaseDto
+use App\Support\Contracts\Arrayable;
+
+abstract class BaseDto implements Arrayable
 {
     /**
      * Get the instance as an array.

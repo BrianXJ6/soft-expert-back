@@ -10,7 +10,10 @@
         "psr-4": {
             "App\\": "app/",
             "Bootstrap\\": "bootstrap/"
-        }
+        },
+        "files": [
+            "app/Support/Helpers/Global.php"
+        ]
     },
     "config": {
         "optimize-autoloader": true,

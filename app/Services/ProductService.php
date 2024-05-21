@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Dto\StoreProductDto;
 use App\Repositories\ProductRepository;
 
 class ProductService
@@ -47,5 +48,19 @@ class ProductService
         return $result
             ? ['data' => $result->toArray()]
             : ['message' => 'Produto não encontrado!'];
+    }
+
+    /**
+     * Store a new product in database
+     *
+     * @param \App\Dto\StoreProductDto $data
+     *
+     * @return array
+     */
+    public function store(StoreProductDto $data): array
+    {
+        $product = $this->repository->store($data);
+
+        return ['data' => $product->toArray()];
     }
 }

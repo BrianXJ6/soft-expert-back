@@ -5,6 +5,8 @@ namespace App\Repositories;
 use PDO;
 use PDOException;
 use App\Dto\ProductDto;
+use App\Models\Product;
+use App\Dto\StoreProductDto;
 use App\Support\Repositories\BaseRepository;
 
 class ProductRepository extends BaseRepository
@@ -76,5 +78,38 @@ class ProductRepository extends BaseRepository
         } catch (PDOException $e) {
             echo "Error when trying to query a product by its ID: " . $e->getMessage();
         }
+    }
+
+    /**
+     * Store a new product in database
+     *
+     * @param \App\Dto\StoreProductDto $data
+     *
+     * @return \App\Models\Product
+     */
+    public function store(StoreProductDto $data): Product
+    {
+        try {
+            $stmt = $this->connection->prepare(<<<EOT
+                INSERT INTO products (name, value, product_type_id)
+                VALUES (:name, :value, :product_type_id)
+            EOT);
+
+            foreach (array_keys($data->toArray()) as $field) {
+                $stmt->bindParam(":$field", $data->{$field});
+            }
+
+            $stmt->execute();
+
+            $product = new Product();
+            $product->id = $this->connection->lastInsertId();
+            foreach (array_keys($data->toArray()) as $key) {
+                $product->$key = $data->{$key};
+            }
+        } catch (PDOException $e) {
+            echo "Error when trying to insert a new product into the database: " . $e->getMessage();
+        }
+
+        return $product;
     }
 }
