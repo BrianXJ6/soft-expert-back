@@ -55,7 +55,8 @@ class ProductTypeController
      */
     public function store(): void
     {
-        $storeProductType = new StoreProductTypeDto(...toExtract($_POST, StoreProductTypeDto::class));
+        $rawData = json_decode(file_get_contents('php://input'), true);
+        $storeProductType = new StoreProductTypeDto(...toExtract($rawData, StoreProductTypeDto::class));
         $response = $this->service->store($storeProductType);
 
         echo json_encode($response);

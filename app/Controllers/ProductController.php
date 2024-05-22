@@ -55,7 +55,8 @@ class ProductController
      */
     public function store(): void
     {
-        $storeProduct = new StoreProductDto(...toExtract($_POST, StoreProductDto::class));
+        $rawData = json_decode(file_get_contents('php://input'), true);
+        $storeProduct = new StoreProductDto(...toExtract($rawData, StoreProductDto::class));
         $response = $this->service->store($storeProduct);
 
         echo json_encode($response);
